@@ -68,6 +68,27 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
     typeof window !== 'undefined' ? localStorage.getItem('droidnest_supabase_anon_key') || '' : ''
   );
 
+  // Custom Admin Login Credentials configuration state
+  const [customAdminEmail, setCustomAdminEmail] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    try {
+      const stored = localStorage.getItem('droidnest_custom_credentials');
+      return stored ? JSON.parse(stored).email || '' : '';
+    } catch {
+      return '';
+    }
+  });
+
+  const [customAdminPassword, setCustomAdminPassword] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    try {
+      const stored = localStorage.getItem('droidnest_custom_credentials');
+      return stored ? JSON.parse(stored).password || '' : '';
+    } catch {
+      return '';
+    }
+  });
+
   const showNotification = (message: string, type: 'success' | 'error' = 'success') => {
     setNotification({ type, message });
     setTimeout(() => setNotification(null), 3500);
@@ -187,98 +208,169 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
         if (supabaseAnonKey) localStorage.setItem('droidnest_supabase_anon_key', supabaseAnonKey);
         else localStorage.removeItem('droidnest_supabase_anon_key');
+
+        if (customAdminEmail && customAdminPassword) {
+          localStorage.setItem('droidnest_custom_credentials', JSON.stringify({
+            email: customAdminEmail.trim(),
+            password: customAdminPassword,
+            display_name: 'Custom Administrator'
+          }));
+        }
       }
 
-      showNotification('Website settings & integration configuration updated.');
+      showNotification('Website settings, security credentials & integrations saved successfully.');
     } catch (err) {
       showNotification('Failed to update settings', 'error');
     }
   };
 
-  // If NOT logged in, show secure admin login screen
+  // If NOT logged in, show secure standalone admin login portal
   if (!adminUser) {
     return (
-      <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-        <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-[#e5eaf0] p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200">
-          <div className="flex items-center justify-between pb-4 border-b border-[#e5eaf0] mb-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#2fa5bd] text-white flex items-center justify-center">
-                <i className="fa-solid fa-lock text-sm"></i>
-              </div>
-              <div>
-                <h1 className="text-base font-bold text-[#172033]">DroidNest Admin</h1>
-                <p className="text-[11px] text-[#657184]">Authorized personnel authentication</p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="text-[#657184] hover:text-[#172033] p-1.5 rounded-md hover:bg-[#f5f7f9]"
-            >
-              <i className="fa-solid fa-xmark text-sm"></i>
-            </button>
+      <div className="fixed inset-0 z-50 bg-[#f5f7f9] flex flex-col justify-between overflow-y-auto">
+        {/* Top Minimal Security Bar */}
+        <header className="h-14 bg-white border-b border-[#e5eaf0] px-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img
+              src="/assets/aistudio/image_f95317bc.png"
+              alt="LinkDit Apk"
+              className="h-7 sm:h-8 w-auto max-w-[160px] object-contain"
+            />
+            <span className="hidden sm:inline-block text-[10px] bg-amber-50 text-amber-700 font-semibold px-2 py-0.5 rounded border border-amber-200">
+              Isolated Endpoint (/admin)
+            </span>
           </div>
+          <button
+            onClick={onClose}
+            className="text-xs font-semibold text-[#657184] hover:text-[#172033] flex items-center gap-1.5 transition-colors"
+          >
+            <i className="fa-solid fa-arrow-left text-[11px]"></i>
+            <span>Back to Public Website</span>
+          </button>
+        </header>
 
-          <form onSubmit={handleLoginSubmit} className="space-y-4">
-            {loginError && (
-              <div className="p-3 bg-red-50 border border-red-200 text-[#dc3545] rounded-lg text-xs flex items-center gap-2">
-                <i className="fa-solid fa-triangle-exclamation"></i>
-                <span>{loginError}</span>
+        {/* Center Login Box */}
+        <div className="flex-1 flex items-center justify-center p-4 my-8">
+          <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl border border-[#e5eaf0] p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200">
+            <div className="text-center pb-6 border-b border-[#e5eaf0] mb-6">
+              <img
+                src="/assets/aistudio/image_f95317bc.png"
+                alt="LinkDit Apk"
+                className="h-10 w-auto max-w-[210px] object-contain mx-auto mb-3"
+              />
+              <h1 className="text-xl font-extrabold text-[#172033] tracking-tight">Internal Management Gateway</h1>
+              <p className="text-xs text-[#657184] mt-1">This administrative portal is separated from the public catalog.</p>
+            </div>
+
+            <form onSubmit={handleLoginSubmit} className="space-y-4">
+              {loginError && (
+                <div className="p-3 bg-red-50 border border-red-200 text-[#dc3545] rounded-lg text-xs flex items-center gap-2">
+                  <i className="fa-solid fa-triangle-exclamation"></i>
+                  <span>{loginError}</span>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-semibold text-[#172033] mb-1">
+                  Administrator Username or Email
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="system.director@droidnest.internal"
+                  className="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-[#e5eaf0] rounded-lg focus:border-[#2fa5bd] focus:ring-2 focus:ring-[#2fa5bd]/15 outline-none font-mono"
+                />
               </div>
-            )}
 
-            <div>
-              <label className="block text-xs font-semibold text-[#172033] mb-1">
-                Admin Email Address
-              </label>
-              <input
-                type="text"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@droidnest.app"
-                className="w-full px-3 py-2 text-sm bg-white border border-[#e5eaf0] rounded-lg focus:border-[#2fa5bd] focus:ring-2 focus:ring-[#2fa5bd]/15 outline-none"
-              />
-            </div>
+              <div>
+                <label className="block text-xs font-semibold text-[#172033] mb-1">
+                  Access Key / Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••••••••••"
+                  className="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-[#e5eaf0] rounded-lg focus:border-[#2fa5bd] focus:ring-2 focus:ring-[#2fa5bd]/15 outline-none font-mono"
+                />
+              </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-[#172033] mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                className="w-full px-3 py-2 text-sm bg-white border border-[#e5eaf0] rounded-lg focus:border-[#2fa5bd] focus:ring-2 focus:ring-[#2fa5bd]/15 outline-none"
-              />
-            </div>
+              {/* Distinct Login Credentials Information & One-Click Autofill */}
+              <div className="p-3.5 bg-[#f5f7f9] rounded-xl border border-[#e5eaf0] text-[11px] text-[#657184] space-y-2.5">
+                <div className="flex items-center justify-between text-[#172033] font-bold text-xs">
+                  <span className="flex items-center gap-1.5">
+                    <i className="fa-solid fa-key text-[#2fa5bd]"></i>
+                    Authorized Login Credentials:
+                  </span>
+                  <span className="text-[10px] text-[#16865c] font-normal">Active &amp; Configured</span>
+                </div>
 
-            <div className="p-3 bg-[#f5f7f9] rounded-lg border border-[#e5eaf0] text-[11px] text-[#657184] space-y-1">
-              <p className="font-semibold text-[#172033]">Default Admin Credentials:</p>
-              <p>Email: <code className="text-[#2fa5bd] bg-white px-1 py-0.5 rounded border border-[#e5eaf0]">admin@droidnest.app</code></p>
-              <p>Password: <code className="text-[#2fa5bd] bg-white px-1 py-0.5 rounded border border-[#e5eaf0]">droidnest2026!</code></p>
-            </div>
+                <div className="bg-white p-2.5 rounded-lg border border-[#e5eaf0] space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-[#172033]">1. System Director (Root Admin):</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEmail('system.director@droidnest.internal');
+                        setPassword('NestSecurity#2026!Master');
+                      }}
+                      className="text-[10px] font-bold text-[#2fa5bd] hover:underline"
+                    >
+                      Autofill
+                    </button>
+                  </div>
+                  <p className="font-mono text-[10px] text-slate-600">User: <strong className="text-[#172033]">system.director@droidnest.internal</strong></p>
+                  <p className="font-mono text-[10px] text-slate-600">Pass: <strong className="text-[#172033]">NestSecurity#2026!Master</strong></p>
+                </div>
 
-            <div className="pt-2 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 text-xs font-medium text-[#657184] hover:text-[#172033]"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={loginLoading}
-                className="px-5 py-2 bg-[#2fa5bd] hover:bg-[#23869b] text-white text-xs font-bold rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
-              >
-                {loginLoading && <i className="fa-solid fa-spinner fa-spin"></i>}
-                <span>Sign In to Dashboard</span>
-              </button>
-            </div>
-          </form>
+                <div className="bg-white p-2.5 rounded-lg border border-[#e5eaf0] space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-[#172033]">2. Operations Lead (Editor):</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEmail('ops.manager@droidnest.internal');
+                        setPassword('DroidOps2026#Secure');
+                      }}
+                      className="text-[10px] font-bold text-[#2fa5bd] hover:underline"
+                    >
+                      Autofill
+                    </button>
+                  </div>
+                  <p className="font-mono text-[10px] text-slate-600">User: <strong className="text-[#172033]">ops.manager@droidnest.internal</strong></p>
+                  <p className="font-mono text-[10px] text-slate-600">Pass: <strong className="text-[#172033]">DroidOps2026#Secure</strong></p>
+                </div>
+              </div>
+
+              <div className="pt-2 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 text-xs font-semibold text-[#657184] hover:text-[#172033]"
+                >
+                  Exit to Website
+                </button>
+                <button
+                  type="submit"
+                  disabled={loginLoading}
+                  className="px-6 py-2.5 bg-[#2fa5bd] hover:bg-[#23869b] text-white text-xs font-bold rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
+                >
+                  {loginLoading && <i className="fa-solid fa-spinner fa-spin"></i>}
+                  <span>Authenticate Session</span>
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
+
+        {/* Bottom Status Footer */}
+        <footer className="h-10 bg-white border-t border-[#e5eaf0] px-6 flex items-center justify-between text-[11px] text-[#657184]">
+          <span>LinkDit Apk Enterprise Node • Protocol v2.4</span>
+          <span>Access logging enabled</span>
+        </footer>
       </div>
     );
   }
@@ -300,11 +392,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
       {/* Admin Top Navigation Bar */}
       <header className="h-14 bg-white border-b border-[#e5eaf0] px-4 sm:px-6 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[#2fa5bd] text-white flex items-center justify-center font-bold">
-            <i className="fa-solid fa-gauge-high text-sm"></i>
-          </div>
-          <div>
-            <span className="text-sm font-bold text-[#172033]">DroidNest Admin Console</span>
+          <img
+            src="/assets/aistudio/image_f95317bc.png"
+            alt="LinkDit Apk"
+            className="h-7 sm:h-8 w-auto max-w-[150px] object-contain"
+          />
+          <div className="flex items-center">
+            <span className="text-xs font-semibold text-[#657184] border-l border-[#e5eaf0] pl-2.5 py-0.5">Admin Console</span>
             <span className="hidden sm:inline-block ml-2 text-[10px] bg-[#16865c]/10 text-[#16865c] font-semibold px-2 py-0.5 rounded border border-[#16865c]/20">
               Role: {adminUser.role.toUpperCase()}
             </span>
@@ -615,7 +709,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   <span className="text-[11px] text-[#657184]">{listings.length} total entries</span>
                 </div>
                 <div className="divide-y divide-[#e5eaf0]">
-                  {listings.slice(0, 5).map(l => (
+                  {listings.length === 0 ? (
+                    <div className="p-8 text-center text-[#657184]">
+                      <p className="text-xs font-semibold text-[#172033]">No listings added yet</p>
+                      <p className="text-[11px] mt-0.5">Use the buttons above to manually add your first app or game.</p>
+                    </div>
+                  ) : (
+                    listings.slice(0, 5).map(l => (
                     <div key={l.id} className="p-3 flex items-center justify-between hover:bg-[#f5f7f9] transition-colors">
                       <div className="flex items-center gap-3">
                         <img src={l.icon_url} alt="" className="w-8 h-8 rounded-md object-cover border border-[#e5eaf0]" />
@@ -639,7 +739,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                         </button>
                       </div>
                     </div>
-                  ))}
+                  )))}
                 </div>
               </div>
             </div>
@@ -917,7 +1017,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-[#e5eaf0]">
-                        {filteredListings.map(l => (
+                        {filteredListings.length === 0 ? (
+                          <tr>
+                            <td colSpan={6} className="p-10 text-center text-[#657184]">
+                              <div className="w-10 h-10 rounded-xl bg-[#f5f7f9] text-[#2fa5bd] flex items-center justify-center mx-auto mb-2 text-lg">
+                                <i className="fa-solid fa-inbox"></i>
+                              </div>
+                              <p className="font-bold text-[#172033] text-xs">No {activeTab === 'apps' ? 'applications' : 'games'} cataloged</p>
+                              <p className="text-[11px] text-[#657184] mt-0.5">Click &quot;Add New {activeTab === 'apps' ? 'App' : 'Game'}&quot; above to create your first entry.</p>
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredListings.map(l => (
                           <tr key={l.id} className="hover:bg-[#f5f7f9]/50 transition-colors">
                             <td className="p-3">
                               <div className="flex items-center gap-2.5">
@@ -956,7 +1067,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                               </button>
                             </td>
                           </tr>
-                        ))}
+                        )))}
                       </tbody>
                     </table>
                   </div>
@@ -1075,6 +1186,14 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     </button>
                   </div>
                 </form>
+              ) : banners.length === 0 ? (
+                <div className="p-12 text-center bg-[#f5f7f9] border border-[#e5eaf0] rounded-xl">
+                  <div className="w-10 h-10 rounded-xl bg-white text-amber-600 flex items-center justify-center mx-auto mb-2 text-lg border border-[#e5eaf0] shadow-xs">
+                    <i className="fa-solid fa-images"></i>
+                  </div>
+                  <p className="font-bold text-[#172033] text-xs">No Featured Banners Added</p>
+                  <p className="text-[11px] text-[#657184] mt-0.5">Click &quot;Add Banner&quot; above to create continuous carousel spotlights.</p>
+                </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {banners.map(b => (
@@ -1199,6 +1318,14 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     </button>
                   </div>
                 </form>
+              ) : blogPosts.length === 0 ? (
+                <div className="p-12 text-center bg-[#f5f7f9] border border-[#e5eaf0] rounded-xl">
+                  <div className="w-10 h-10 rounded-xl bg-white text-[#2fa5bd] flex items-center justify-center mx-auto mb-2 text-lg border border-[#e5eaf0] shadow-xs">
+                    <i className="fa-solid fa-newspaper"></i>
+                  </div>
+                  <p className="font-bold text-[#172033] text-xs">No Blog Articles Authored</p>
+                  <p className="text-[11px] text-[#657184] mt-0.5">Click &quot;New Post&quot; above to write your first editorial guide.</p>
+                </div>
               ) : (
                 <div className="space-y-3">
                   {blogPosts.map(p => (
@@ -1280,7 +1407,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   <h3 className="text-xs font-bold text-[#172033]">Google Analytics 4 &amp; Google Tag Manager</h3>
                 </div>
                 <p className="text-xs text-[#657184] leading-relaxed">
-                  Analytics tracking remains strictly disabled until you configure genuine IDs. DroidNest never uses placeholder IDs as real or transmits sensitive personal information.
+                  Analytics tracking remains strictly disabled until you configure genuine IDs. LinkDit Apk never uses placeholder IDs as real or transmits sensitive personal information.
                 </p>
                 <div className="space-y-3 pt-2">
                   <div>
@@ -1392,6 +1519,41 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                     className="w-full px-3 py-1.5 text-xs bg-white border border-[#e5eaf0] rounded-lg"
                   />
+                </div>
+              </div>
+
+              {/* Custom Administrator Login Access */}
+              <div className="p-4 bg-[#f5f7f9] rounded-xl border border-[#e5eaf0] space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-md bg-[#2fa5bd] text-white flex items-center justify-center text-[10px]">
+                    <i className="fa-solid fa-user-lock"></i>
+                  </div>
+                  <h3 className="text-xs font-bold text-[#172033]">Custom Administrator Access Credentials</h3>
+                </div>
+                <p className="text-[11px] text-[#657184]">
+                  Define custom access credentials for your private <code>/admin</code> gateway. You can also always sign in with the system root account (<code>system.director@droidnest.internal</code>).
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#172033] mb-1">Custom Admin Email / Username</label>
+                    <input
+                      type="text"
+                      value={customAdminEmail}
+                      onChange={(e) => setCustomAdminEmail(e.target.value)}
+                      placeholder="custom.admin@yourdomain.com"
+                      className="w-full px-3 py-1.5 text-xs bg-white border border-[#e5eaf0] rounded-lg"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#172033] mb-1">Custom Password / Access Key</label>
+                    <input
+                      type="text"
+                      value={customAdminPassword}
+                      onChange={(e) => setCustomAdminPassword(e.target.value)}
+                      placeholder="Enter new strong password"
+                      className="w-full px-3 py-1.5 text-xs bg-white border border-[#e5eaf0] rounded-lg font-mono"
+                    />
+                  </div>
                 </div>
               </div>
 

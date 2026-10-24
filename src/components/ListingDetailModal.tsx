@@ -237,7 +237,7 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
               )}
             </div>
             <p className="text-[11px] text-[#657184] italic">
-              Notice: DroidNest links directly to official storefronts and recognized publisher distributions. We do not host modified binaries, altered signatures, or unauthorized keygens.
+              Notice: LinkDit Apk links directly to official storefronts and recognized publisher distributions. We do not host modified binaries, altered signatures, or unauthorized keygens.
             </p>
           </div>
 

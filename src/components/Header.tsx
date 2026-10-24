@@ -5,18 +5,12 @@ interface HeaderProps {
   currentTab: string;
   onNavigate: (tab: string, param?: string) => void;
   onOpenSearch: () => void;
-  adminUser: AdminUser | null;
-  onOpenAdmin: () => void;
-  onLogoutAdmin: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   currentTab,
   onNavigate,
-  onOpenSearch,
-  adminUser,
-  onOpenAdmin,
-  onLogoutAdmin
+  onOpenSearch
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lang, setLang] = useState('EN');
@@ -41,20 +35,14 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Left: Brand Logo */}
         <button
           onClick={() => handleNavClick('home')}
-          className="flex items-center gap-2.5 text-left group focus:outline-none"
-          aria-label="DroidNest Home"
+          className="flex items-center text-left group focus:outline-none py-1"
+          aria-label="LinkDit Apk Home"
         >
-          <div className="w-8 h-8 rounded-lg bg-[#2fa5bd] flex items-center justify-center text-white shadow-sm shadow-[#2fa5bd]/20 group-hover:bg-[#23869b] transition-colors">
-            <i className="fa-brands fa-android text-lg"></i>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-bold tracking-tight text-[#172033] leading-none">
-              Droid<span className="text-[#2fa5bd]">Nest</span>
-            </span>
-            <span className="text-[10px] font-medium text-[#657184] tracking-wider uppercase">
-              App Discovery
-            </span>
-          </div>
+          <img
+            src="/assets/aistudio/image_f95317bc.png"
+            alt="LinkDit Apk"
+            className="h-8 sm:h-9 w-auto max-w-[180px] sm:max-w-[220px] object-contain transition-transform group-hover:scale-102"
+          />
         </button>
 
         {/* Center: Desktop Navigation */}
@@ -110,37 +98,6 @@ export const Header: React.FC<HeaderProps> = ({
             <i className="fa-solid fa-chevron-down text-[9px] text-[#657184] absolute right-1.5 top-2.5 pointer-events-none"></i>
           </div>
 
-          {/* Admin Login Link */}
-          {adminUser ? (
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={onOpenAdmin}
-                className="px-2.5 py-1 text-xs font-semibold text-[#2fa5bd] bg-[#2fa5bd]/10 border border-[#2fa5bd]/30 rounded-md hover:bg-[#2fa5bd]/20 transition-colors flex items-center gap-1.5"
-                title="Admin Control Panel"
-              >
-                <i className="fa-solid fa-gauge-high"></i>
-                <span className="hidden sm:inline">Admin</span>
-              </button>
-              <button
-                onClick={onLogoutAdmin}
-                className="p-1.5 text-xs text-[#dc3545] hover:bg-[#dc3545]/10 rounded-md transition-colors"
-                title="Log Out"
-                aria-label="Log Out Administrator"
-              >
-                <i className="fa-solid fa-arrow-right-from-bracket"></i>
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={onOpenAdmin}
-              className="px-2.5 py-1 text-xs font-medium text-[#657184] hover:text-[#172033] hover:bg-[#f5f7f9] rounded-md transition-colors flex items-center gap-1.5"
-              title="Administrator Portal"
-            >
-              <i className="fa-solid fa-lock text-[11px]"></i>
-              <span className="hidden sm:inline">Admin</span>
-            </button>
-          )}
-
           {/* Mobile Hamburger Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -175,15 +132,7 @@ export const Header: React.FC<HeaderProps> = ({
           })}
           <div className="pt-2 border-t border-[#e5eaf0] flex items-center justify-between text-xs text-[#657184] px-3">
             <span>Language: English</span>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenAdmin();
-              }}
-              className="text-[#2fa5bd] font-medium"
-            >
-              {adminUser ? 'Open Admin' : 'Admin Login'}
-            </button>
+            <span className="text-[#2fa5bd] font-medium">Safe &amp; Verified</span>
           </div>
         </div>
       )}

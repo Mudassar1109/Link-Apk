@@ -9,6 +9,7 @@ import {
 } from './types';
 import { dbService } from './services/db';
 import { Header } from './components/Header';
+import { HomeHeroBanner } from './components/HomeHeroBanner';
 import { HeroSearch } from './components/HeroSearch';
 import { ContinuousCarousel } from './components/ContinuousCarousel';
 import { SectionHeader } from './components/SectionHeader';
@@ -22,7 +23,24 @@ import { LegalModal } from './components/LegalModal';
 import { AdminPortal } from './components/AdminPortal';
 
 export default function App() {
-  // Navigation & View state
+  // Check if current URL points to the dedicated /admin route
+  const checkIsAdminUrl = () => {
+    if (typeof window === 'undefined') return false;
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    const search = window.location.search.toLowerCase();
+    return (
+      path === '/admin' || 
+      path.startsWith('/admin/') || 
+      hash === '#/admin' || 
+      hash === '#admin' || 
+      search.includes('route=admin')
+    );
+  };
+
+  const [isAdminRoute, setIsAdminRoute] = useState<boolean>(checkIsAdminUrl);
+
+  // Navigation & View state for public portal
   const [currentTab, setCurrentTab] = useState<'home' | 'games' | 'apps' | 'categories' | 'blog'>('home');
   const [selectedCategorySlug, setSelectedCategorySlug] = useState<string | null>(null);
   const [selectedBlogPostSlug, setSelectedBlogPostSlug] = useState<string | null>(null);
@@ -30,7 +48,6 @@ export default function App() {
   // Modals & Panels
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [legalPageId, setLegalPageId] = useState<string | null>(null);
-  const [adminPortalOpen, setAdminPortalOpen] = useState(false);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
 
   // Database Data States
@@ -40,6 +57,19 @@ export default function App() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [settings, setSettings] = useState<WebsiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // URL route listener for browser navigation (/admin vs /)
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setIsAdminRoute(checkIsAdminUrl());
+    };
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
+  }, []);
 
   // Load initial data
   const loadPortalData = async () => {
@@ -57,7 +87,7 @@ export default function App() {
       setBlogPosts(p);
       setSettings(s);
     } catch (err) {
-      console.error('Failed to load DroidNest catalog:', err);
+      console.error('Failed to load LinkDit Apk catalog:', err);
     } finally {
       setLoading(false);
     }
@@ -89,10 +119,6 @@ export default function App() {
 
   // Navigate helper
   const handleNavigate = (tab: string, param?: string) => {
-    if (tab === 'admin') {
-      setAdminPortalOpen(true);
-      return;
-    }
     if (tab === 'categories' && param) {
       setSelectedCategorySlug(param);
     } else {
@@ -101,6 +127,14 @@ export default function App() {
     setSelectedBlogPostSlug(null);
     setCurrentTab(tab as any);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToPublic = () => {
+    if (typeof window !== 'undefined') {
+      window.history.pushState(null, '', '/');
+    }
+    setIsAdminRoute(false);
+    loadPortalData();
   };
 
   // Open search focus
@@ -153,20 +187,32 @@ export default function App() {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 3);
 
+  // Dedicated standalone route for Admin Portal (/admin)
+  if (isAdminRoute) {
+    return (
+      <AdminPortal
+        adminUser={adminUser}
+        onLogin={(user) => {
+          setAdminUser(user);
+          loadPortalData();
+        }}
+        onLogout={() => {
+          dbService.logoutAdmin();
+          setAdminUser(null);
+        }}
+        onClose={navigateToPublic}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white text-[#172033] flex flex-col font-sans selection:bg-[#2fa5bd]/20 selection:text-[#172033]">
       
-      {/* 1. Slim Sticky Header */}
+      {/* 1. Slim Sticky Header (Clean public interface, zero admin links) */}
       <Header
         currentTab={currentTab}
         onNavigate={handleNavigate}
         onOpenSearch={handleOpenSearch}
-        adminUser={adminUser}
-        onOpenAdmin={() => setAdminPortalOpen(true)}
-        onLogoutAdmin={() => {
-          dbService.logoutAdmin();
-          setAdminUser(null);
-        }}
       />
 
       {/* Main Content Area */}
@@ -174,7 +220,7 @@ export default function App() {
         {loading ? (
           <div className="py-24 text-center">
             <i className="fa-solid fa-circle-notch fa-spin text-3xl text-[#2fa5bd] mb-3 block"></i>
-            <span className="text-sm font-semibold text-[#172033]">Loading DroidNest portal...</span>
+            <span className="text-sm font-semibold text-[#172033]">Loading LinkDit Apk portal...</span>
           </div>
         ) : currentTab === 'home' ? (
           /* ============================================================== */
@@ -182,6 +228,12 @@ export default function App() {
           /* ============================================================== */
           <div className="space-y-6">
             
+            {/* 1. Animated LinkDit Apk Top Hero Banner */}
+            <HomeHeroBanner
+              onNavigate={handleNavigate}
+              onOpenSearch={handleOpenSearch}
+            />
+
             {/* 2. Hero & Centred Search */}
             <HeroSearch
               onSelectListing={(listing) => setSelectedListing(listing)}
@@ -310,6 +362,21 @@ export default function App() {
                 </section>
               )}
 
+              {/* Blank Catalog Status (When no apps or games added yet) */}
+              {allListings.length === 0 && (
+                <div className="p-8 sm:p-12 text-center bg-[#f5f7f9] border border-[#e5eaf0] rounded-2xl max-w-2xl mx-auto my-6">
+                  <div className="w-14 h-14 bg-white rounded-2xl border border-[#e5eaf0] text-[#2fa5bd] flex items-center justify-center mx-auto mb-4 text-2xl shadow-xs">
+                    <i className="fa-solid fa-layer-group"></i>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-[#172033]">
+                    Portal Catalog is Ready
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#657184] mt-1.5 max-w-md mx-auto leading-relaxed">
+                    All dummy data has been removed. You can now manually catalog your verified Android apps, games, and banners from the isolated admin panel at <code className="bg-white px-1.5 py-0.5 rounded border border-[#e5eaf0] text-[#2fa5bd] font-mono text-xs">/admin</code>.
+                  </p>
+                </div>
+              )}
+
               {/* 9. Categories Grid */}
               <section aria-labelledby="heading-categories">
                 <SectionHeader
@@ -360,15 +427,27 @@ export default function App() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-              {allListings.filter(l => l.listing_type === 'game').map(game => (
-                <ListingCard
-                  key={game.id}
-                  listing={game}
-                  onClick={(l) => setSelectedListing(l)}
-                />
-              ))}
-            </div>
+            {allListings.filter(l => l.listing_type === 'game').length === 0 ? (
+              <div className="p-12 text-center bg-[#f5f7f9] border border-[#e5eaf0] rounded-2xl max-w-xl mx-auto">
+                <div className="w-12 h-12 bg-white rounded-xl border border-[#e5eaf0] text-purple-600 flex items-center justify-center mx-auto mb-3 text-xl shadow-xs">
+                  <i className="fa-solid fa-gamepad"></i>
+                </div>
+                <h3 className="text-base font-bold text-[#172033]">No Games Cataloged Yet</h3>
+                <p className="text-xs text-[#657184] mt-1 max-w-sm mx-auto">
+                  Log into the isolated admin portal at <code className="bg-white px-1.5 py-0.5 rounded border border-[#e5eaf0] text-[#2fa5bd] font-mono text-xs">/admin</code> to manually add your first Android game.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                {allListings.filter(l => l.listing_type === 'game').map(game => (
+                  <ListingCard
+                    key={game.id}
+                    listing={game}
+                    onClick={(l) => setSelectedListing(l)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         ) : currentTab === 'apps' ? (
           /* ============================================================== */
@@ -389,15 +468,27 @@ export default function App() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-              {allListings.filter(l => l.listing_type === 'app').map(app => (
-                <ListingCard
-                  key={app.id}
-                  listing={app}
-                  onClick={(l) => setSelectedListing(l)}
-                />
-              ))}
-            </div>
+            {allListings.filter(l => l.listing_type === 'app').length === 0 ? (
+              <div className="p-12 text-center bg-[#f5f7f9] border border-[#e5eaf0] rounded-2xl max-w-xl mx-auto">
+                <div className="w-12 h-12 bg-white rounded-xl border border-[#e5eaf0] text-[#2fa5bd] flex items-center justify-center mx-auto mb-3 text-xl shadow-xs">
+                  <i className="fa-solid fa-shapes"></i>
+                </div>
+                <h3 className="text-base font-bold text-[#172033]">No Applications Cataloged Yet</h3>
+                <p className="text-xs text-[#657184] mt-1 max-w-sm mx-auto">
+                  Log into the isolated admin portal at <code className="bg-white px-1.5 py-0.5 rounded border border-[#e5eaf0] text-[#2fa5bd] font-mono text-xs">/admin</code> to manually add your first Android application.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                {allListings.filter(l => l.listing_type === 'app').map(app => (
+                  <ListingCard
+                    key={app.id}
+                    listing={app}
+                    onClick={(l) => setSelectedListing(l)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         ) : currentTab === 'categories' ? (
           /* ============================================================== */
@@ -514,25 +605,6 @@ export default function App() {
         <LegalModal
           pageId={legalPageId}
           onClose={() => setLegalPageId(null)}
-        />
-      )}
-
-      {/* Admin Portal Modal / Route */}
-      {adminPortalOpen && (
-        <AdminPortal
-          adminUser={adminUser}
-          onLogin={(user) => {
-            setAdminUser(user);
-            loadPortalData();
-          }}
-          onLogout={() => {
-            dbService.logoutAdmin();
-            setAdminUser(null);
-          }}
-          onClose={() => {
-            setAdminPortalOpen(false);
-            loadPortalData();
-          }}
         />
       )}
 

@@ -128,9 +128,15 @@ Designed with a compact white-theme aesthetic inspired by modern APK discovery p
 5. Paste them into `.env` or input them directly into the **DroidNest Admin Panel > Settings** tab.
 6. The application will immediately utilize your live PostgreSQL database!
 
-### Default Admin Credentials:
-- **Email**: `admin@droidnest.app`
-- **Password**: `droidnest2026!`
+### Isolated Admin Gateway URL & Credentials:
+- **Dedicated Access URL**: `https://your-domain.com/admin` (or `#/admin`)
+- **Primary Root Administrator**:
+  - **Username / Email**: `system.director@droidnest.internal` (or `droidnest_master`)
+  - **Password**: `NestSecurity#2026!Master`
+- **Secondary Operations Lead**:
+  - **Username / Email**: `ops.manager@droidnest.internal` (or `ops_lead`)
+  - **Password**: `DroidOps2026#Secure`
+- *Security Note*: The public portal contains zero links or buttons pointing to the administrative panel. Access is strictly via the dedicated `/admin` URL.
 
 ---
 

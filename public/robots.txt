@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/*
 
-Sitemap: https://droidnest.app/sitemap.xml
+Sitemap: https://linkditapk.com/sitemap.xml

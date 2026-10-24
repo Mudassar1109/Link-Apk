@@ -19,6 +19,35 @@ const STORAGE_KEYS = {
   AUTH: 'droidnest_admin_auth'
 };
 
+// Purge any prior seeded dummy listings/banners/posts so the catalog starts completely blank
+if (typeof window !== 'undefined') {
+  try {
+    if (!localStorage.getItem('droidnest_clean_slate_v3')) {
+      localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.BANNERS, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.BLOG_POSTS, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.MEDIA, JSON.stringify([]));
+      localStorage.setItem('droidnest_clean_slate_v3', 'true');
+    }
+    // Update website settings branding to LinkDit Apk
+    if (!localStorage.getItem('linkditapk_rebrand_v1')) {
+      const stored = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          parsed.site_name = 'LinkDit Apk';
+          parsed.editorial_title = 'Why LinkDit Apk Is Built Different';
+          parsed.contact_email = 'editorial@linkditapk.com';
+          localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(parsed));
+        } catch {}
+      } else {
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(INITIAL_WEBSITE_SETTINGS));
+      }
+      localStorage.setItem('linkditapk_rebrand_v1', 'true');
+    }
+  } catch (e) {}
+}
+
 // Initialize local database if not exists
 function getStored<T>(key: string, defaultValue: T): T {
   if (typeof window === 'undefined') return defaultValue;
@@ -492,17 +521,38 @@ export const dbService = {
   },
 
   loginAdmin(email: string, password: string): { success: boolean; user?: AdminUser; error?: string } {
-    // Authenticate: admin credentials
-    // Note: When Supabase Auth is active, user can also authenticate with Supabase
     const cleanEmail = email.trim().toLowerCase();
+    
+    // Check custom credentials in localStorage if set
+    if (typeof window !== 'undefined') {
+      try {
+        const customCreds = localStorage.getItem('droidnest_custom_credentials');
+        if (customCreds) {
+          const parsed = JSON.parse(customCreds);
+          if (parsed.email.toLowerCase() === cleanEmail && parsed.password === password) {
+            const user: AdminUser = {
+              id: 'usr-admin-custom',
+              email: parsed.email,
+              display_name: parsed.display_name || 'Master Administrator',
+              role: 'admin'
+            };
+            localStorage.setItem(STORAGE_KEYS.AUTH, JSON.stringify(user));
+            return { success: true, user };
+          }
+        }
+      } catch (e) {}
+    }
+
+    // New Distinct Admin Credentials
+    // 1. System Director (Full Root Privileges)
     if (
-      (cleanEmail === 'admin@droidnest.app' && password === 'droidnest2026!') ||
-      (cleanEmail === 'admin' && password === 'admin')
+      (cleanEmail === 'system.director@droidnest.internal' || cleanEmail === 'droidnest_master') &&
+      password === 'NestSecurity#2026!Master'
     ) {
       const user: AdminUser = {
-        id: 'usr-admin-1',
-        email: cleanEmail === 'admin' ? 'admin@droidnest.app' : cleanEmail,
-        display_name: 'Lead System Administrator',
+        id: 'usr-sys-dir',
+        email: 'system.director@droidnest.internal',
+        display_name: 'System Director',
         role: 'admin'
       };
       if (typeof window !== 'undefined') {
@@ -510,7 +560,25 @@ export const dbService = {
       }
       return { success: true, user };
     }
-    return { success: false, error: 'Invalid administrator credentials. Please check your email and password.' };
+
+    // 2. Operations Manager (Catalog & Editorial Lead)
+    if (
+      (cleanEmail === 'ops.manager@droidnest.internal' || cleanEmail === 'ops_lead') &&
+      password === 'DroidOps2026#Secure'
+    ) {
+      const user: AdminUser = {
+        id: 'usr-ops-mgr',
+        email: 'ops.manager@droidnest.internal',
+        display_name: 'Operations Manager',
+        role: 'editor'
+      };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(STORAGE_KEYS.AUTH, JSON.stringify(user));
+      }
+      return { success: true, user };
+    }
+
+    return { success: false, error: 'Access denied: Invalid administrator credentials or unauthorized user.' };
   },
 
   logoutAdmin(): void {

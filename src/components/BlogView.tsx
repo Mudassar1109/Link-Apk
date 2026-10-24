@@ -44,10 +44,10 @@ export const BlogView: React.FC<BlogViewProps> = ({
       }],
       "publisher": {
         "@type": "Organization",
-        "name": "DroidNest",
+        "name": "LinkDit Apk",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://droidnest.app/logo.png"
+          "url": "https://linkditapk.com/assets/aistudio/image_f95317bc.png"
         }
       },
       "description": activePost.excerpt
@@ -246,8 +246,19 @@ export const BlogView: React.FC<BlogViewProps> = ({
       </div>
 
       {/* Articles Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredPosts.map(post => (
+      {filteredPosts.length === 0 ? (
+        <div className="p-12 text-center bg-[#f5f7f9] border border-[#e5eaf0] rounded-xl max-w-xl mx-auto">
+          <div className="w-12 h-12 bg-white rounded-xl border border-[#e5eaf0] text-[#2fa5bd] flex items-center justify-center mx-auto mb-3 text-xl">
+            <i className="fa-solid fa-newspaper"></i>
+          </div>
+          <p className="text-sm font-bold text-[#172033]">No Articles Published Yet</p>
+          <p className="text-xs text-[#657184] mt-1">
+            Articles authored in the isolated admin panel will appear here.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {filteredPosts.map(post => (
           <article
             key={post.id}
             onClick={() => onSelectPost(post.slug)}
@@ -293,6 +304,7 @@ export const BlogView: React.FC<BlogViewProps> = ({
           </article>
         ))}
       </div>
+      )}
     </div>
   );
 };

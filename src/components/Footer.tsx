@@ -10,7 +10,7 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({
   onNavigate,
   onOpenLegal,
-  siteName = 'DroidNest',
+  siteName = 'LinkDit Apk',
   tagline = 'Discover the Best Android Apps & Games'
 }) => {
   return (
@@ -22,13 +22,12 @@ export const Footer: React.FC<FooterProps> = ({
           
           {/* Col 1 & 2: Brand and Mission */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#2fa5bd] flex items-center justify-center text-white shadow-xs">
-                <i className="fa-brands fa-android text-lg"></i>
-              </div>
-              <span className="text-lg font-bold tracking-tight text-[#172033]">
-                {siteName}
-              </span>
+            <div className="flex items-center">
+              <img
+                src="/assets/aistudio/image_f95317bc.png"
+                alt="LinkDit Apk"
+                className="h-9 sm:h-10 w-auto max-w-[210px] object-contain"
+              />
             </div>
             
             <p className="mt-3 text-xs text-[#657184] leading-relaxed max-w-sm">
@@ -41,7 +40,7 @@ export const Footer: React.FC<FooterProps> = ({
                 target="_blank"
                 rel="noreferrer"
                 className="w-8 h-8 rounded-md bg-[#f5f7f9] hover:bg-[#e5eaf0] hover:text-[#172033] flex items-center justify-center text-sm border border-[#e5eaf0] transition-colors"
-                aria-label="DroidNest on GitHub"
+                aria-label="LinkDit Apk on GitHub"
               >
                 <i className="fa-brands fa-github"></i>
               </a>
@@ -50,7 +49,7 @@ export const Footer: React.FC<FooterProps> = ({
                 target="_blank"
                 rel="noreferrer"
                 className="w-8 h-8 rounded-md bg-[#f5f7f9] hover:bg-[#e5eaf0] hover:text-[#172033] flex items-center justify-center text-sm border border-[#e5eaf0] transition-colors"
-                aria-label="DroidNest on X"
+                aria-label="LinkDit Apk on X"
               >
                 <i className="fa-brands fa-x-twitter"></i>
               </a>
@@ -59,7 +58,7 @@ export const Footer: React.FC<FooterProps> = ({
                 target="_blank"
                 rel="noreferrer"
                 className="w-8 h-8 rounded-md bg-[#f5f7f9] hover:bg-[#e5eaf0] hover:text-[#172033] flex items-center justify-center text-sm border border-[#e5eaf0] transition-colors"
-                aria-label="DroidNest Telegram Channel"
+                aria-label="LinkDit Apk Telegram Channel"
               >
                 <i className="fa-brands fa-telegram"></i>
               </a>
@@ -184,7 +183,7 @@ export const Footer: React.FC<FooterProps> = ({
                   onClick={() => onOpenLegal('about')}
                   className="hover:text-[#2fa5bd] transition-colors"
                 >
-                  About DroidNest
+                  About LinkDit Apk
                 </button>
               </li>
               <li>
@@ -235,7 +234,7 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Bottom Bar with Technical Disclaimers */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#657184] gap-3">
           <div className="flex items-center gap-2">
-            <span>© {new Date().getFullYear()} DroidNest. All rights reserved.</span>
+            <span>© {new Date().getFullYear()} LinkDit Apk. All rights reserved.</span>
             <span>•</span>
             <span className="text-[#16865c] flex items-center gap-1">
               <i className="fa-solid fa-check text-[9px]"></i>
@@ -247,12 +246,6 @@ export const Footer: React.FC<FooterProps> = ({
             <span className="text-[#657184]">
               Android is a trademark of Google LLC.
             </span>
-            <button
-              onClick={() => onNavigate('admin')}
-              className="text-[#657184] hover:text-[#2fa5bd] transition-colors"
-            >
-              Admin Portal
-            </button>
           </div>
         </div>
 

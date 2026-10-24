@@ -8,7 +8,7 @@ interface EditorialIntroProps {
 }
 
 export const EditorialIntro: React.FC<EditorialIntroProps> = ({
-  title = 'Why DroidNest Is Built Different',
+  title = 'Why LinkDit Apk Is Built Different',
   content,
   onExploreOpenSource,
   onViewGuidelines
@@ -33,7 +33,7 @@ export const EditorialIntro: React.FC<EditorialIntroProps> = ({
           ) : (
             <>
               <p>
-                In a mobile ecosystem clouded by deceptive repackaged APKs, aggressive telemetry, and fake &quot;unlimited money&quot; mods, <strong>DroidNest</strong> was founded on a strict standard: absolute verification and zero malware compromises.
+                In a mobile ecosystem clouded by deceptive repackaged APKs, aggressive telemetry, and fake &quot;unlimited money&quot; mods, <strong>LinkDit Apk</strong> was founded on a strict standard: absolute verification and zero malware compromises.
               </p>
               <p>
                 Every application and game in our catalog links directly to official developer storefronts, verified Google Play releases, or official GitHub &amp; F-Droid open-source repositories. We never host pirated binaries, altered signatures, or intrusive adware bundles.

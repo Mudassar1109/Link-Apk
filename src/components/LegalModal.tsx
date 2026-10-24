@@ -11,9 +11,9 @@ export const LegalModal: React.FC<LegalModalProps> = ({ pageId, onClose }) => {
       case 'about':
         return (
           <>
-            <h1 className="text-xl sm:text-2xl font-bold text-[#172033] mb-4">About DroidNest</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-[#172033] mb-4">About LinkDit Apk</h1>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
-              <strong>DroidNest</strong> is an authoritative, independent discovery catalog for Android applications, mobile utilities, and games.
+              <strong>LinkDit Apk</strong> is an authoritative, independent discovery catalog for Android applications, mobile utilities, and games.
             </p>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
               Our platform was created to provide a clean, uncluttered, and trustworthy alternative to traditional APK repositories. We believe users deserve complete clarity on where their software originates.
@@ -32,7 +32,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ pageId, onClose }) => {
           <>
             <h1 className="text-xl sm:text-2xl font-bold text-[#172033] mb-4">Editorial Policy &amp; Standards</h1>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
-              DroidNest maintains strict editorial autonomy. Our software selections and reviews are produced by technical editors with experience in Android systems and open-source software.
+              LinkDit Apk maintains strict editorial autonomy. Our software selections and reviews are produced by technical editors with experience in Android systems and open-source software.
             </p>
             <h2 className="text-sm font-bold text-[#172033] uppercase tracking-wider mt-4 mb-2">Inclusion Criteria</h2>
             <ul className="list-disc pl-5 text-xs sm:text-sm text-slate-700 space-y-1.5 mb-4">
@@ -52,7 +52,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ pageId, onClose }) => {
           <>
             <h1 className="text-xl sm:text-2xl font-bold text-[#172033] mb-4">Privacy Policy</h1>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
-              Last updated: October 2026. Your privacy is paramount at DroidNest.
+              Last updated: October 2026. Your privacy is paramount at LinkDit Apk.
             </p>
             <h2 className="text-sm font-bold text-[#172033] uppercase tracking-wider mt-4 mb-2">Information We Do NOT Collect</h2>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
@@ -60,7 +60,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ pageId, onClose }) => {
             </p>
             <h2 className="text-sm font-bold text-[#172033] uppercase tracking-wider mt-4 mb-2">Cookies &amp; Local Storage</h2>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
-              DroidNest does not use marketing or cross-site tracking cookies. We utilize browser <code>localStorage</code> strictly to remember administrative preferences and local demo changes.
+              LinkDit Apk does not use marketing or cross-site tracking cookies. We utilize browser <code>localStorage</code> strictly to remember administrative preferences and local demo changes.
             </p>
             <h2 className="text-sm font-bold text-[#172033] uppercase tracking-wider mt-4 mb-2">Analytics (GA4 / GTM / Cloudflare)</h2>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
@@ -74,15 +74,15 @@ export const LegalModal: React.FC<LegalModalProps> = ({ pageId, onClose }) => {
           <>
             <h1 className="text-xl sm:text-2xl font-bold text-[#172033] mb-4">Terms of Use</h1>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
-              By accessing DroidNest, you agree to comply with and be bound by the following terms and conditions.
+              By accessing LinkDit Apk, you agree to comply with and be bound by the following terms and conditions.
             </p>
             <h2 className="text-sm font-bold text-[#172033] uppercase tracking-wider mt-4 mb-2">Acceptable Use</h2>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
-              DroidNest is provided for discovery and educational purposes. You agree not to use automated scraping bots in a manner that degrades service availability or infringes on trademark ownership.
+              LinkDit Apk is provided for discovery and educational purposes. You agree not to use automated scraping bots in a manner that degrades service availability or infringes on trademark ownership.
             </p>
             <h2 className="text-sm font-bold text-[#172033] uppercase tracking-wider mt-4 mb-2">Third-Party Software</h2>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
-              All applications and games referenced on DroidNest remain the intellectual property of their respective developers and copyright holders. Software installations are governed by the license agreements specified by the original authors.
+              All applications and games referenced on LinkDit Apk remain the intellectual property of their respective developers and copyright holders. Software installations are governed by the license agreements specified by the original authors.
             </p>
           </>
         );
@@ -92,10 +92,10 @@ export const LegalModal: React.FC<LegalModalProps> = ({ pageId, onClose }) => {
           <>
             <h1 className="text-xl sm:text-2xl font-bold text-[#172033] mb-4">Disclaimer</h1>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
-              <strong>Trademark Notice:</strong> Android, Google Play, and the Google Play logo are trademarks of Google LLC. DroidNest is an independent website and is not affiliated with, authorized, maintained, sponsored, or endorsed by Google LLC.
+              <strong>Trademark Notice:</strong> Android, Google Play, and the Google Play logo are trademarks of Google LLC. LinkDit Apk is an independent website and is not affiliated with, authorized, maintained, sponsored, or endorsed by Google LLC.
             </p>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3">
-              <strong>External Links:</strong> DroidNest provides outbound links to third-party developer websites, GitHub repositories, and Google Play Store pages. While we review links for authenticity at the time of publication, we do not control third-party servers and cannot be held liable for external service changes.
+              <strong>External Links:</strong> LinkDit Apk provides outbound links to third-party developer websites, GitHub repositories, and Google Play Store pages. While we review links for authenticity at the time of publication, we do not control third-party servers and cannot be held liable for external service changes.
             </p>
           </>
         );
@@ -109,8 +109,8 @@ export const LegalModal: React.FC<LegalModalProps> = ({ pageId, onClose }) => {
               For editorial enquiries, developer submissions, or DMCA copyright notifications, please reach out directly:
             </p>
             <div className="bg-[#f5f7f9] p-4 rounded-xl border border-[#e5eaf0] my-4 text-xs sm:text-sm space-y-2">
-              <p><strong>Editorial &amp; Submissions:</strong> editorial@droidnest.app</p>
-              <p><strong>Legal &amp; Copyright:</strong> dmca@droidnest.app</p>
+              <p><strong>Editorial &amp; Submissions:</strong> editorial@linkditapk.com</p>
+              <p><strong>Legal &amp; Copyright:</strong> dmca@linkditapk.com</p>
               <p><strong>Response SLA:</strong> Within 48 business hours</p>
             </div>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">

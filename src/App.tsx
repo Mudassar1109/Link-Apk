@@ -38,6 +38,7 @@ export default function App() {
       hash === '#admin' ||
       hash === '#/mudassar' ||
       hash === '#mudassar' ||
+      hash.includes('/mudassar') ||
       search.includes('route=admin') ||
       search.includes('route=mudassar')
     );

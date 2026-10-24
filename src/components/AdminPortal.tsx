@@ -638,18 +638,41 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   <button
                     onClick={() => {
                       setEditingListing({
+                        id: 'listing-capcut',
                         listing_type: 'app',
                         status: 'published',
-                        version: 'v1.0.0',
-                        android_requirement: 'Android 7.0 and up',
-                        app_size: '25 MB'
+                        title: 'CapCut - Video Editor',
+                        slug: 'capcut-video-editor',
+                        developer: 'ByteDance / CapCut',
+                        original_developer: 'ByteDance / CapCut',
+                        description: `CapCut is an official, feature-packed video editing application designed for content creators on Android. It allows users to cut, reverse, and change speed with precision, alongside advanced options like keyframe animation, smooth slow-motion, chrome key, and auto-captions.\n\nWith CapCut, creators can apply trending filters, video effects, and body effects, as well as export videos in 4K resolution at up to 60fps. Safe and verified downloads directly from official sources ensure full data privacy and optimal performance.`,
+                        short_description: 'CapCut is an easy-to-use video editing app with powerful AI features, speed curves, transitions, and watermark-free options for content creators.',
+                        version: 'v12.0.0',
+                        android_requirement: 'Android 5.0 and up',
+                        app_size: '100 MB',
+                        category_id: 'cat-media',
+                        category_name: 'Media & Video',
+                        category_slug: 'media-video',
+                        icon_url: 'https://play-lh.googleusercontent.com/LyRU8-S79aA2vJ3_pP1pC9g-B1d_Z9xG0xX_4K9S20a4K0X0_N9=w240-h240-rw',
+                        cover_image_url: 'https://play-lh.googleusercontent.com/9xX0_K9S20a4K0X0_N9_LyRU8-S79aA2vJ3_pP1pC9g=w1920-h1080-rw',
+                        screenshots: [],
+                        official_website: 'https://www.capcut.com',
+                        official_store_url: 'https://play.google.com/store/apps/details?id=com.lemon.lvoverseas',
+                        authorised_download_url: 'https://www.capcut.com/download',
+                        tags: ['video', 'editor', 'capcut'],
+                        is_updated: true,
+                        is_popular: true,
+                        published_at: new Date().toISOString(),
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
                       });
                       setActiveTab('apps');
+                      handleSaveListing({ preventDefault: () => {} } as any);
                     }}
                     className="px-3.5 py-2 bg-[#2fa5bd] hover:bg-[#23869b] text-white text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1.5"
                   >
                     <i className="fa-solid fa-plus"></i>
-                    <span>Add New App</span>
+                    <span>Add CapCut (Quick)</span>
                   </button>
 
                   <button

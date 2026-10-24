@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Listing } from '../types';
 
 interface ListingDetailModalProps {
@@ -15,6 +15,26 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
   allListings
 }) => {
   const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
+
+  // Handle Escape key to close
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (selectedScreenshot) {
+          setSelectedScreenshot(null);
+        } else {
+          onClose();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [onClose, selectedScreenshot]);
 
   // Related listings: same category or same type, excluding current
   const relatedListings = allListings
@@ -46,23 +66,39 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
     "description": listing.short_description || listing.description
   };
 
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5">
+    <div 
+      className="fixed inset-0 z-[9999] overflow-y-auto bg-black/60 backdrop-blur-xs flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-5" 
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
       {/* Dynamic Schema Script Injection */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
       />
 
-      <div className="relative bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-[#e5eaf0] overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8">
+      <div className="relative bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-[#e5eaf0] overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-4 sm:my-8 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         
         {/* Sticky Close Button */}
         <button
-          onClick={onClose}
-          className="absolute top-3.5 right-3.5 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-[#172033] shadow-md border border-[#e5eaf0] flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-[#2fa5bd]"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+          className="absolute top-2 right-2 sm:top-3.5 sm:right-3.5 z-30 w-10 h-10 sm:w-9 sm:h-9 rounded-full bg-white hover:bg-gray-50 text-[#172033] shadow-lg border-2 border-[#e5eaf0] flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-[#2fa5bd] active:scale-95"
           aria-label="Close detail modal"
+          type="button"
         >
-          <i className="fa-solid fa-xmark text-sm"></i>
+          <i className="fa-solid fa-xmark text-base sm:text-sm"></i>
         </button>
 
         {/* Hero Cover Banner */}
@@ -100,7 +136,7 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
               {/* Title & Developer */}
               <div className="mb-1">
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold text-[#172033]">
+                  <h1 id="modal-title" className="text-xl sm:text-2xl font-bold text-[#172033]">
                     {listing.title}
                   </h1>
                   <span className="w-5 h-5 rounded-full bg-[#16865c]/10 text-[#16865c] flex items-center justify-center text-[10px]" title="Authentic Developer Listing">
@@ -284,12 +320,25 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
       {selectedScreenshot && (
         <div
           onClick={() => setSelectedScreenshot(null)}
-          className="fixed inset-0 z-60 bg-black/80 flex items-center justify-center p-4 cursor-pointer"
+          className="fixed inset-0 z-[10000] bg-black/90 flex items-center justify-center p-4 cursor-pointer"
+          role="dialog"
+          aria-modal="true"
         >
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedScreenshot(null);
+            }}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-[#172033] flex items-center justify-center shadow-lg"
+            aria-label="Close screenshot"
+          >
+            <i className="fa-solid fa-xmark"></i>
+          </button>
           <img
             src={selectedScreenshot}
             alt="Expanded screenshot"
             className="max-w-full max-h-[90vh] rounded-lg shadow-2xl object-contain"
+            onClick={(e) => e.stopPropagation()}
           />
         </div>
       )}

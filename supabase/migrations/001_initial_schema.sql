@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS public.listings (
   description TEXT NOT NULL DEFAULT '',
   short_description TEXT NOT NULL DEFAULT '',
   developer TEXT NOT NULL,
+  original_developer TEXT,
   category_id TEXT REFERENCES public.categories(id) ON DELETE SET NULL,
   category_name TEXT,
   category_slug TEXT,
@@ -43,10 +44,25 @@ CREATE TABLE IF NOT EXISTS public.listings (
   official_website TEXT DEFAULT '',
   official_store_url TEXT DEFAULT '',
   authorised_download_url TEXT DEFAULT '',
-  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('published', 'draft', 'archived')),
-  published_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+  download_mode TEXT DEFAULT 'external' CHECK (download_mode IN ('external', 'direct')),
+  hosted_file_url TEXT DEFAULT '',
+  hosted_file_path TEXT DEFAULT '',
+  file_name TEXT DEFAULT '',
+  file_size_bytes BIGINT DEFAULT 0,
+  file_sha256 TEXT DEFAULT '',
+  source_url TEXT DEFAULT '',
+  license_status TEXT DEFAULT '',
+  permission_status TEXT DEFAULT '',
+  distribution_authorized BOOLEAN NOT NULL DEFAULT false,
+  imported_from TEXT DEFAULT 'manual' CHECK (imported_from IN ('url', 'api', 'manual', 'upload')),
+  import_metadata JSONB DEFAULT '{}'::jsonb,
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('published', 'draft', 'archived', 'review')),
+  published_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+  reviewed_by TEXT,
+  reviewed_at TIMESTAMPTZ,
+  review_notes TEXT DEFAULT '',
   is_featured BOOLEAN NOT NULL DEFAULT false,
   is_popular BOOLEAN NOT NULL DEFAULT false,
   is_updated BOOLEAN NOT NULL DEFAULT false,
@@ -195,10 +211,14 @@ CREATE POLICY "Admins can update website settings"
   USING (public.is_admin());
 
 -- ====================================================================
--- STORAGE BUCKETS (Media Library)
+-- STORAGE BUCKETS (Media Library & APKs)
 -- ====================================================================
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('droidnest-media', 'droidnest-media', true)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('droidnest-apks', 'droidnest-apks', false)
 ON CONFLICT (id) DO NOTHING;
 
 CREATE POLICY "Public can view droidnest-media"
@@ -212,3 +232,16 @@ CREATE POLICY "Admins can upload to droidnest-media"
 CREATE POLICY "Admins can delete from droidnest-media"
   ON storage.objects FOR DELETE
   USING (bucket_id = 'droidnest-media' AND public.is_admin());
+
+-- APK Storage - only admins can upload, downloads require authorization
+CREATE POLICY "Admins can upload to droidnest-apks"
+  ON storage.objects FOR INSERT
+  WITH CHECK (bucket_id = 'droidnest-apks' AND public.is_admin());
+
+CREATE POLICY "Admins can view droidnest-apks"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'droidnest-apks' AND public.is_admin());
+
+CREATE POLICY "Admins can delete from droidnest-apks"
+  ON storage.objects FOR DELETE
+  USING (bucket_id = 'droidnest-apks' AND public.is_admin());

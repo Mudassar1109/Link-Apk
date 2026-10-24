@@ -1,5 +1,6 @@
 export type ListingType = 'app' | 'game';
-export type ListingStatus = 'published' | 'draft' | 'archived';
+export type ListingStatus = 'published' | 'draft' | 'archived' | 'review';
+export type DownloadMode = 'external' | 'direct';
 
 export interface Listing {
   id: string;
@@ -9,6 +10,7 @@ export interface Listing {
   description: string;
   short_description: string;
   developer: string;
+  original_developer?: string;
   category_id: string;
   category_name?: string;
   category_slug?: string;
@@ -21,10 +23,26 @@ export interface Listing {
   official_website: string;
   official_store_url: string;
   authorised_download_url: string;
+  // New fields for enhanced functionality
+  download_mode?: DownloadMode;
+  hosted_file_url?: string;
+  hosted_file_path?: string;
+  file_name?: string;
+  file_size_bytes?: number;
+  file_sha256?: string;
+  source_url?: string;
+  license_status?: string;
+  permission_status?: string;
+  distribution_authorized?: boolean;
+  imported_from?: 'url' | 'api' | 'manual' | 'upload';
+  import_metadata?: any;
   status: ListingStatus;
   published_at: string;
   created_at: string;
   updated_at: string;
+  reviewed_by?: string;
+  reviewed_at?: string;
+  review_notes?: string;
   is_featured?: boolean;
   is_popular?: boolean;
   is_updated?: boolean;

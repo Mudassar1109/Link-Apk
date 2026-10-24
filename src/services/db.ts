@@ -183,6 +183,11 @@ export const dbService = {
         updated_at: now
       } as Listing;
       
+      // If publishing from draft/review and published_at not set
+      if (updated.status === 'published' && !updated.published_at) {
+        updated.published_at = now;
+      }
+      
       items[index] = updated;
       setStored(STORAGE_KEYS.LISTINGS, items);
 
@@ -204,7 +209,8 @@ export const dbService = {
         listing_type: listing.listing_type || 'app',
         description: listing.description || '',
         short_description: listing.short_description || '',
-        developer: listing.developer || 'Unknown Developer',
+        developer: listing.developer || listing.original_developer || 'Unknown Developer',
+        original_developer: listing.original_developer || listing.developer || 'Unknown Developer',
         category_id: listing.category_id || 'cat-tools',
         category_name: listing.category_name,
         category_slug: listing.category_slug,
@@ -217,15 +223,30 @@ export const dbService = {
         official_website: listing.official_website || '',
         official_store_url: listing.official_store_url || '',
         authorised_download_url: listing.authorised_download_url || '',
-        status: listing.status || 'published',
-        published_at: listing.published_at || now,
+        download_mode: listing.download_mode || 'external',
+        hosted_file_url: listing.hosted_file_url || '',
+        hosted_file_path: listing.hosted_file_path || '',
+        file_name: listing.file_name || '',
+        file_size_bytes: listing.file_size_bytes || 0,
+        file_sha256: listing.file_sha256 || '',
+        source_url: listing.source_url || '',
+        license_status: listing.license_status || '',
+        permission_status: listing.permission_status || '',
+        distribution_authorized: listing.distribution_authorized || false,
+        imported_from: listing.imported_from || 'manual',
+        import_metadata: listing.import_metadata || {},
+        status: listing.status || 'draft',
+        published_at: listing.status === 'published' ? (listing.published_at || now) : null,
         created_at: now,
         updated_at: now,
+        reviewed_by: listing.reviewed_by || '',
+        reviewed_at: listing.reviewed_at || null,
+        review_notes: listing.review_notes || '',
         is_featured: Boolean(listing.is_featured),
         is_popular: Boolean(listing.is_popular),
         is_updated: Boolean(listing.is_updated),
         tags: listing.tags || []
-      };
+      } as Listing;
 
       items.unshift(newListing);
       setStored(STORAGE_KEYS.LISTINGS, items);
@@ -459,6 +480,12 @@ export const dbService = {
     };
     items.unshift(newMedia);
     setStored(STORAGE_KEYS.MEDIA, items);
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      try {
+        // Try to store in a media table if exists, otherwise just local
+      } catch (e) {}
+    }
     return newMedia;
   },
 
@@ -506,6 +533,19 @@ export const dbService = {
       activeBanners,
       publishedArticles
     };
+  },
+
+  // --- IMPORT/SEARCH ---
+  async importFromUrl(url: string): Promise<Partial<Listing>> {
+    // This is a placeholder for legitimate API-based import
+    // In production, would use approved APIs like APKMirror API, Play Store API alternatives, etc.
+    // Must respect terms of service
+    throw new Error('URL import requires a configured legitimate metadata API. Please use Search Apps with approved source or manual entry.');
+  },
+
+  async searchApps(query: string, source: 'approved' = 'approved'): Promise<Partial<Listing>[]> {
+    // This is a placeholder for legitimate API search
+    throw new Error('App search requires configuration of an approved metadata API. Please configure in settings.');
   },
 
   // --- AUTH ---
@@ -587,10 +627,85 @@ export const dbService = {
     }
   },
 
+  // Upload file to Supabase Storage
+  async uploadFile(file: File, bucket: string = 'droidnest-apks'): Promise<{ url: string; path: string } | null> {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      throw new Error('Supabase not configured. Cannot upload files.');
+    }
+    
+    // Validate file
+    const allowedTypes = ['application/vnd.android.package-archive', 'application/x-apk', 'application/octet-stream'];
+    const allowedExtensions = ['.apk', '.zip', '.xapk', '.apks'];
+    const fileExt = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    
+    if (bucket === 'droidnest-apks') {
+      if (!allowedExtensions.includes(fileExt) && !allowedTypes.includes(file.type)) {
+        throw new Error('Invalid file type. Only APK, XAPK, APKS files are allowed.');
+      }
+      const maxSize = 1024 * 1024 * 1024; // 1GB
+      if (file.size > maxSize) {
+        throw new Error('File size exceeds 1GB limit.');
+      }
+    }
+    
+    const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+    const filePath = `${fileName}`;
+    
+    try {
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+      
+      if (error) throw error;
+      
+      if (bucket === 'droidnest-apks') {
+        // For private bucket, we store the path; signed URLs would be generated on demand
+        return { url: '', path: data.path };
+      } else {
+        const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(data.path);
+        return { url: urlData.publicUrl, path: data.path };
+      }
+    } catch (e) {
+      console.error('Upload failed:', e);
+      throw e;
+    }
+  },
+
+  // Get signed URL for private file download
+  async getSignedDownloadUrl(path: string, bucket: string = 'droidnest-apks', expiresIn: number = 3600): Promise<string | null> {
+    const supabase = getSupabaseClient();
+    if (!supabase) return null;
+    
+    try {
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .createSignedUrl(path, expiresIn);
+      
+      if (error) throw error;
+      return data.signedUrl;
+    } catch (e) {
+      console.error('Failed to get signed URL:', e);
+      return null;
+    }
+  },
+
+  // Calculate SHA256 of file
+  async calculateSHA256(file: File): Promise<string> {
+    const buffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+  },
+
   // Export database as JSON
   exportDataJSON(): string {
     return JSON.stringify({
-      version: '1.0',
+      version: '2.0',
       exported_at: new Date().toISOString(),
       listings: getStored(STORAGE_KEYS.LISTINGS, INITIAL_LISTINGS),
       categories: getStored(STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES),

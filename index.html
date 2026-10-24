@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Ensure window.fetch has both getter and setter for extension/sandbox compatibility -->
+    <script>
+      (function() {
+        try {
+          var _origFetch = window.fetch;
+          var _currentFetch = _origFetch;
+          Object.defineProperty(window, 'fetch', {
+            get: function() {
+              return _currentFetch;
+            },
+            set: function(val) {
+              _currentFetch = val;
+            },
+            configurable: true,
+            enumerable: true
+          });
+        } catch (e) {
+          // ignore if environment locks property
+        }
+      })();
+    </script>
+    <title>DroidNest — Discover the Best Android Apps & Games</title>
+    <meta name="description" content="Explore verified Android apps, productivity software, mobile tools, and exciting games. Safe, authoritative listings with official developer sources." />
+    <link rel="canonical" href="https://droidnest.app" />
+    <meta property="og:site_name" content="DroidNest" />
+    <meta property="og:title" content="DroidNest — Discover the Best Android Apps & Games" />
+    <meta property="og:description" content="Explore verified Android apps, productivity software, mobile tools, and exciting games with official developer sources." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://droidnest.app" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&auto=format&fit=crop&q=80" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DroidNest — Discover the Best Android Apps & Games" />
+    <meta name="twitter:description" content="Explore verified Android apps, productivity software, mobile tools, and exciting games with official developer sources." />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&auto=format&fit=crop&q=80" />
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- WebSite & Organization Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://droidnest.app/#organization",
+          "name": "DroidNest",
+          "url": "https://droidnest.app",
+          "logo": "https://droidnest.app/logo.png",
+          "description": "Android applications and games discovery portal providing verified, legitimate mobile tools with official developer links."
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://droidnest.app/#website",
+          "url": "https://droidnest.app",
+          "name": "DroidNest",
+          "publisher": { "@id": "https://droidnest.app/#organization" },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://droidnest.app/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body class="bg-white text-[#172033] antialiased selection:bg-[#2fa5bd]/20 selection:text-[#172033]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

@@ -638,6 +638,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   <button
                     onClick={() => {
                       setEditingListing({
+<<<<<<< HEAD
                         id: 'listing-capcut',
                         listing_type: 'app',
                         status: 'published',
@@ -668,11 +669,24 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                       });
                       setActiveTab('apps');
                       handleSaveListing({ preventDefault: () => {} } as any);
+=======
+                        listing_type: 'app',
+                        status: 'published',
+                        version: 'v1.0.0',
+                        android_requirement: 'Android 7.0 and up',
+                        app_size: '25 MB'
+                      });
+                      setActiveTab('apps');
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
                     }}
                     className="px-3.5 py-2 bg-[#2fa5bd] hover:bg-[#23869b] text-white text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1.5"
                   >
                     <i className="fa-solid fa-plus"></i>
+<<<<<<< HEAD
                     <span>Add CapCut (Quick)</span>
+=======
+                    <span>Add New App</span>
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
                   </button>
 
                   <button

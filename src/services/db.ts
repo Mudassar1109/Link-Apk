@@ -183,11 +183,14 @@ export const dbService = {
         updated_at: now
       } as Listing;
       
+<<<<<<< HEAD
       // If publishing from draft/review and published_at not set
       if (updated.status === 'published' && !updated.published_at) {
         updated.published_at = now;
       }
       
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
       items[index] = updated;
       setStored(STORAGE_KEYS.LISTINGS, items);
 
@@ -209,8 +212,12 @@ export const dbService = {
         listing_type: listing.listing_type || 'app',
         description: listing.description || '',
         short_description: listing.short_description || '',
+<<<<<<< HEAD
         developer: listing.developer || listing.original_developer || 'Unknown Developer',
         original_developer: listing.original_developer || listing.developer || 'Unknown Developer',
+=======
+        developer: listing.developer || 'Unknown Developer',
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
         category_id: listing.category_id || 'cat-tools',
         category_name: listing.category_name,
         category_slug: listing.category_slug,
@@ -223,6 +230,7 @@ export const dbService = {
         official_website: listing.official_website || '',
         official_store_url: listing.official_store_url || '',
         authorised_download_url: listing.authorised_download_url || '',
+<<<<<<< HEAD
         download_mode: listing.download_mode || 'external',
         hosted_file_url: listing.hosted_file_url || '',
         hosted_file_path: listing.hosted_file_path || '',
@@ -242,11 +250,21 @@ export const dbService = {
         reviewed_by: listing.reviewed_by || '',
         reviewed_at: listing.reviewed_at || null,
         review_notes: listing.review_notes || '',
+=======
+        status: listing.status || 'published',
+        published_at: listing.published_at || now,
+        created_at: now,
+        updated_at: now,
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
         is_featured: Boolean(listing.is_featured),
         is_popular: Boolean(listing.is_popular),
         is_updated: Boolean(listing.is_updated),
         tags: listing.tags || []
+<<<<<<< HEAD
       } as Listing;
+=======
+      };
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
 
       items.unshift(newListing);
       setStored(STORAGE_KEYS.LISTINGS, items);
@@ -480,12 +498,15 @@ export const dbService = {
     };
     items.unshift(newMedia);
     setStored(STORAGE_KEYS.MEDIA, items);
+<<<<<<< HEAD
     const supabase = getSupabaseClient();
     if (supabase) {
       try {
         // Try to store in a media table if exists, otherwise just local
       } catch (e) {}
     }
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
     return newMedia;
   },
 
@@ -535,6 +556,7 @@ export const dbService = {
     };
   },
 
+<<<<<<< HEAD
   // --- IMPORT/SEARCH ---
   async importFromUrl(url: string): Promise<Partial<Listing>> {
     // This is a placeholder for legitimate API-based import
@@ -548,6 +570,8 @@ export const dbService = {
     throw new Error('App search requires configuration of an approved metadata API. Please configure in settings.');
   },
 
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
   // --- AUTH ---
   getCurrentAdmin(): AdminUser | null {
     if (typeof window === 'undefined') return null;
@@ -627,6 +651,7 @@ export const dbService = {
     }
   },
 
+<<<<<<< HEAD
   // Upload file to Supabase Storage
   async uploadFile(file: File, bucket: string = 'droidnest-apks'): Promise<{ url: string; path: string } | null> {
     const supabase = getSupabaseClient();
@@ -706,6 +731,12 @@ export const dbService = {
   exportDataJSON(): string {
     return JSON.stringify({
       version: '2.0',
+=======
+  // Export database as JSON
+  exportDataJSON(): string {
+    return JSON.stringify({
+      version: '1.0',
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
       exported_at: new Date().toISOString(),
       listings: getStored(STORAGE_KEYS.LISTINGS, INITIAL_LISTINGS),
       categories: getStored(STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES),

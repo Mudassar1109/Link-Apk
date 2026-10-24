@@ -1,6 +1,10 @@
 export type ListingType = 'app' | 'game';
+<<<<<<< HEAD
 export type ListingStatus = 'published' | 'draft' | 'archived' | 'review';
 export type DownloadMode = 'external' | 'direct';
+=======
+export type ListingStatus = 'published' | 'draft' | 'archived';
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
 
 export interface Listing {
   id: string;
@@ -10,7 +14,10 @@ export interface Listing {
   description: string;
   short_description: string;
   developer: string;
+<<<<<<< HEAD
   original_developer?: string;
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
   category_id: string;
   category_name?: string;
   category_slug?: string;
@@ -23,6 +30,7 @@ export interface Listing {
   official_website: string;
   official_store_url: string;
   authorised_download_url: string;
+<<<<<<< HEAD
   // New fields for enhanced functionality
   download_mode?: DownloadMode;
   hosted_file_url?: string;
@@ -36,13 +44,18 @@ export interface Listing {
   distribution_authorized?: boolean;
   imported_from?: 'url' | 'api' | 'manual' | 'upload';
   import_metadata?: any;
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
   status: ListingStatus;
   published_at: string;
   created_at: string;
   updated_at: string;
+<<<<<<< HEAD
   reviewed_by?: string;
   reviewed_at?: string;
   review_notes?: string;
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
   is_featured?: boolean;
   is_popular?: boolean;
   is_updated?: boolean;

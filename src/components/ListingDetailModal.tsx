@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
+=======
+import React, { useState } from 'react';
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
 import { Listing } from '../types';
 
 interface ListingDetailModalProps {
@@ -16,6 +20,7 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
 }) => {
   const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
 
+<<<<<<< HEAD
   // Handle Escape key to close
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -36,6 +41,8 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
     };
   }, [onClose, selectedScreenshot]);
 
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
   // Related listings: same category or same type, excluding current
   const relatedListings = allListings
     .filter(l => l.id !== listing.id && (l.category_id === listing.category_id || l.listing_type === listing.listing_type))
@@ -66,6 +73,7 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
     "description": listing.short_description || listing.description
   };
 
+<<<<<<< HEAD
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -80,12 +88,17 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
       aria-modal="true"
       aria-labelledby="modal-title"
     >
+=======
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5">
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
       {/* Dynamic Schema Script Injection */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
       />
 
+<<<<<<< HEAD
       <div className="relative bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-[#e5eaf0] overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-4 sm:my-8 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         
         {/* Sticky Close Button */}
@@ -99,6 +112,17 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
           type="button"
         >
           <i className="fa-solid fa-xmark text-base sm:text-sm"></i>
+=======
+      <div className="relative bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-[#e5eaf0] overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8">
+        
+        {/* Sticky Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3.5 right-3.5 z-20 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-[#172033] shadow-md border border-[#e5eaf0] flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-[#2fa5bd]"
+          aria-label="Close detail modal"
+        >
+          <i className="fa-solid fa-xmark text-sm"></i>
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
         </button>
 
         {/* Hero Cover Banner */}
@@ -136,7 +160,11 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
               {/* Title & Developer */}
               <div className="mb-1">
                 <div className="flex items-center gap-2">
+<<<<<<< HEAD
                   <h1 id="modal-title" className="text-xl sm:text-2xl font-bold text-[#172033]">
+=======
+                  <h1 className="text-xl sm:text-2xl font-bold text-[#172033]">
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
                     {listing.title}
                   </h1>
                   <span className="w-5 h-5 rounded-full bg-[#16865c]/10 text-[#16865c] flex items-center justify-center text-[10px]" title="Authentic Developer Listing">
@@ -320,6 +348,7 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
       {selectedScreenshot && (
         <div
           onClick={() => setSelectedScreenshot(null)}
+<<<<<<< HEAD
           className="fixed inset-0 z-[10000] bg-black/90 flex items-center justify-center p-4 cursor-pointer"
           role="dialog"
           aria-modal="true"
@@ -334,11 +363,18 @@ export const ListingDetailModal: React.FC<ListingDetailModalProps> = ({
           >
             <i className="fa-solid fa-xmark"></i>
           </button>
+=======
+          className="fixed inset-0 z-60 bg-black/80 flex items-center justify-center p-4 cursor-pointer"
+        >
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
           <img
             src={selectedScreenshot}
             alt="Expanded screenshot"
             className="max-w-full max-h-[90vh] rounded-lg shadow-2xl object-contain"
+<<<<<<< HEAD
             onClick={(e) => e.stopPropagation()}
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
           />
         </div>
       )}

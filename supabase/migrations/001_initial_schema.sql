@@ -31,7 +31,10 @@ CREATE TABLE IF NOT EXISTS public.listings (
   description TEXT NOT NULL DEFAULT '',
   short_description TEXT NOT NULL DEFAULT '',
   developer TEXT NOT NULL,
+<<<<<<< HEAD
   original_developer TEXT,
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
   category_id TEXT REFERENCES public.categories(id) ON DELETE SET NULL,
   category_name TEXT,
   category_slug TEXT,
@@ -44,6 +47,7 @@ CREATE TABLE IF NOT EXISTS public.listings (
   official_website TEXT DEFAULT '',
   official_store_url TEXT DEFAULT '',
   authorised_download_url TEXT DEFAULT '',
+<<<<<<< HEAD
   download_mode TEXT DEFAULT 'external' CHECK (download_mode IN ('external', 'direct')),
   hosted_file_url TEXT DEFAULT '',
   hosted_file_path TEXT DEFAULT '',
@@ -63,6 +67,12 @@ CREATE TABLE IF NOT EXISTS public.listings (
   reviewed_by TEXT,
   reviewed_at TIMESTAMPTZ,
   review_notes TEXT DEFAULT '',
+=======
+  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('published', 'draft', 'archived')),
+  published_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
   is_featured BOOLEAN NOT NULL DEFAULT false,
   is_popular BOOLEAN NOT NULL DEFAULT false,
   is_updated BOOLEAN NOT NULL DEFAULT false,
@@ -211,16 +221,23 @@ CREATE POLICY "Admins can update website settings"
   USING (public.is_admin());
 
 -- ====================================================================
+<<<<<<< HEAD
 -- STORAGE BUCKETS (Media Library & APKs)
+=======
+-- STORAGE BUCKETS (Media Library)
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
 -- ====================================================================
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('droidnest-media', 'droidnest-media', true)
 ON CONFLICT (id) DO NOTHING;
 
+<<<<<<< HEAD
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('droidnest-apks', 'droidnest-apks', false)
 ON CONFLICT (id) DO NOTHING;
 
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6
 CREATE POLICY "Public can view droidnest-media"
   ON storage.objects FOR SELECT
   USING (bucket_id = 'droidnest-media');
@@ -232,6 +249,7 @@ CREATE POLICY "Admins can upload to droidnest-media"
 CREATE POLICY "Admins can delete from droidnest-media"
   ON storage.objects FOR DELETE
   USING (bucket_id = 'droidnest-media' AND public.is_admin());
+<<<<<<< HEAD
 
 -- APK Storage - only admins can upload, downloads require authorization
 CREATE POLICY "Admins can upload to droidnest-apks"
@@ -245,3 +263,5 @@ CREATE POLICY "Admins can view droidnest-apks"
 CREATE POLICY "Admins can delete from droidnest-apks"
   ON storage.objects FOR DELETE
   USING (bucket_id = 'droidnest-apks' AND public.is_admin());
+=======
+>>>>>>> 48f6dc551e4ec2955949c6fa81e8943cba7f04d6

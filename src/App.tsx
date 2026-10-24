@@ -23,7 +23,7 @@ import { LegalModal } from './components/LegalModal';
 import { AdminPortal } from './components/AdminPortal';
 
 export default function App() {
-  // Check if current URL points to the dedicated /admin route
+  // Check if current URL points to the dedicated admin route
   const checkIsAdminUrl = () => {
     if (typeof window === 'undefined') return false;
     const path = window.location.pathname.toLowerCase();
@@ -31,10 +31,15 @@ export default function App() {
     const search = window.location.search.toLowerCase();
     return (
       path === '/admin' || 
-      path.startsWith('/admin/') || 
+      path.startsWith('/admin/') ||
+      path === '/mudassar' ||
+      path.startsWith('/mudassar/') ||
       hash === '#/admin' || 
-      hash === '#admin' || 
-      search.includes('route=admin')
+      hash === '#admin' ||
+      hash === '#/mudassar' ||
+      hash === '#mudassar' ||
+      search.includes('route=admin') ||
+      search.includes('route=mudassar')
     );
   };
 

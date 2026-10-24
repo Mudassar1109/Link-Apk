@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Ensure window.fetch has both getter and setter for extension/sandbox compatibility -->
+    <script>
+      (function() {
+        try {
+          var _origFetch = window.fetch;
+          var _currentFetch = _origFetch;
+          Object.defineProperty(window, 'fetch', {
+            get: function() {
+              return _currentFetch;
+            },
+            set: function(val) {
+              _currentFetch = val;
+            },
+            configurable: true,
+            enumerable: true
+          });
+        } catch (e) {
+          // ignore if environment locks property
+        }
+      })();
+    </script>
+    <title>LinkDit Apk — Discover the Best Android Apps & Games</title>
+    <meta name="description" content="Explore verified Android apps, productivity software, mobile tools, and exciting games on LinkDit Apk. Safe, authoritative listings with official developer sources." />
+    <link rel="icon" type="image/png" href="/assets/aistudio/image_f95317bc.png" />
+    <link rel="canonical" href="https://linkditapk.com" />
+    <meta property="og:site_name" content="LinkDit Apk" />
+    <meta property="og:title" content="LinkDit Apk — Discover the Best Android Apps & Games" />
+    <meta property="og:description" content="Explore verified Android apps, productivity software, mobile tools, and exciting games with official developer sources on LinkDit Apk." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://linkditapk.com" />
+    <meta property="og:image" content="/assets/aistudio/image_f95317bc.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="LinkDit Apk — Discover the Best Android Apps & Games" />
+    <meta name="twitter:description" content="Explore verified Android apps, productivity software, mobile tools, and exciting games with official developer sources on LinkDit Apk." />
+    <meta name="twitter:image" content="/assets/aistudio/image_f95317bc.png" />
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- WebSite & Organization Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://linkditapk.com/#organization",
+          "name": "LinkDit Apk",
+          "url": "https://linkditapk.com",
+          "logo": "https://linkditapk.com/assets/aistudio/image_f95317bc.png",
+          "description": "Android applications and games discovery portal providing verified, legitimate mobile tools with official developer links."
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://linkditapk.com/#website",
+          "url": "https://linkditapk.com",
+          "name": "LinkDit Apk",
+          "publisher": { "@id": "https://linkditapk.com/#organization" },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://linkditapk.com/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body class="bg-white text-[#172033] antialiased selection:bg-[#2fa5bd]/20 selection:text-[#172033]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

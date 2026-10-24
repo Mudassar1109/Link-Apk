@@ -1,0 +1,6 @@
+{
+  "name": "DroidNest",
+  "description": "Android Apps & Games Discovery Portal with verified official developer sources, continuous featured carousel, category browsing, and technical SEO.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

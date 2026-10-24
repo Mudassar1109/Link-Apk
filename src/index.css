@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #f5f7f9;
+  --text-primary: #172033;
+  --text-secondary: #657184;
+  --accent: #2fa5bd;
+  --accent-hover: #23869b;
+  --border: #e5eaf0;
+  --success: #16865c;
+  --danger: #dc3545;
+
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  color-scheme: light;
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+body {
+  margin: 0;
+  background-color: #ffffff;
+  color: #172033;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar for white clean theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f7f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Continuous Marquee Carousel Animation */
+@keyframes continuousScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-continuous {
+  display: flex;
+  width: max-content;
+  animation: continuousScroll 32s linear infinite;
+  will-change: transform;
+}
+
+.carousel-paused {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-continuous {
+    animation: none;
+    transform: none;
+    overflow-x: auto;
+  }
+}
+
+/* Hero Banner Animated Effects */
+@keyframes lightSweep {
+  0% {
+    transform: translateX(-150%) skewX(-25deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  35% {
+    transform: translateX(350%) skewX(-25deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(350%) skewX(-25deg);
+    opacity: 0;
+  }
+}
+
+@keyframes bannerPulseGlow {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes floatSoft {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-light-sweep {
+  animation: lightSweep 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+.animate-pulse-glow {
+  animation: bannerPulseGlow 4.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-float-soft {
+  animation: floatSoft 3.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Focus Ring Accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
